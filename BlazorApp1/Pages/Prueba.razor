@@ -1,0 +1,94 @@
+﻿@page "/prueba"
+
+<PageTitle>Prueba</PageTitle>
+
+<h1>Prueba</h1>
+
+<p>La variable está activada?</p> @if (@variable) { <p>Sí</p> } else { <p>No</p> }
+
+
+    @if (variable)
+    {
+        <button class="btn btn-primary" @onclick="Toggle">Desactivar</button>
+    } else
+    {
+        <button class="btn btn-primary" @onclick="Toggle">Activar</button>
+    }
+
+<hr />
+
+<h1>Calculadora</h1>
+<p>Calculador básica que realiza adición, substracción, multiplicación y división</p>
+
+<input type="number" name="num1" @bind="num1">
+<input type="number" name="num2" @bind="num2">
+
+<br />
+<br />
+
+<button @onclick="@(e => Add(num1, num2))">Sumar</button>
+<button @onclick="@(e => Substract(num1, num2))">Restar</button>
+<button @onclick="@(e => Multiply(num1, num2))">Multiplicar</button>
+<button @onclick="@(e => Divide(num1, num2))">Dividir</button>
+
+<br />
+<br />
+
+@if(@error == "")
+{
+    <p>Resultado: @result</p>
+} else
+{
+    <p>@error</p>
+}
+
+<hr />
+
+
+
+
+@code {
+    private Boolean variable = false;
+    private decimal num1 = 0;
+    private decimal num2 = 0;
+    private decimal result = 0;
+    private string error = "";
+
+    private void Toggle()
+    {
+        variable = !variable;
+    }
+
+    private void Add(decimal num1, decimal num2)
+    {
+        error = "";
+        result = num1 + num2;
+    }
+
+    private void Substract(decimal num1, decimal num2)
+    {
+        error = "";
+        result = num1 - num2;
+    }
+
+    private void Multiply(decimal num1, decimal num2)
+    {
+        error = "";
+        result = num1 * num2;
+    }
+
+    private void Divide(decimal num1, decimal num2)
+    {
+        error = "";
+
+        if (num2 != 0)
+        {
+            result = num1 / num2;
+        }
+        else
+        {
+            error = "Error: división entre 0";
+        }
+    }
+
+}
