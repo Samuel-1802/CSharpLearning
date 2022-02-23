@@ -48,9 +48,9 @@
 
 <p>Ingresar nombre y apellido a una base de datos SQL Server.</p>
 
-<input class="form-control" type="text" @bind="nombre" placeholder="Nombre">
+@* <input class="form-control" type="text" @bind="nombre" @bind:event="oninput" placeholder="Nombre">
 <br />
-<input class="form-control" type="text" @bind="apellido" placeholder="Apellido">
+<input class="form-control" type="text" @bind="apellido" @bind:event="oninput" placeholder="Apellido">
 
 <br />
 
@@ -60,8 +60,18 @@
 } else
 {
     <button class="btn btn-primary" @onclick="Insert">Agregar</button>
-}
+}*@
 
+<EditForm Model="@Form" OnValidSubmit="@Insert">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText class="form-control" id="nombre" @bind-Value="Form.nombre" />
+    <br />
+    <InputText class="form-control" id="apellido" @bind-Value="Form.apellido" />
+    <br />
+    <button type="submit" class="btn btn-primary">Agregar</button>
+</EditForm>
 
 <br />
 <br />
@@ -74,8 +84,18 @@
     private decimal num2 = 0;
     private decimal result = 0;
     private string error = "";
-    private string nombre = "";
-    private string apellido = "";
+    //private string nombre = "";
+    //private string apellido = "";
+    private FormModel Form = new();
+
+    public class FormModel
+    {
+        [Required]
+        public string? nombre { get; set; }
+
+        [Required]
+        public string? apellido { get; set; }
+    }
 
     // Función de botón
     private void Toggle()
@@ -130,7 +150,7 @@
         // query insert a al base de datos
         SqlCommand command;
         SqlDataAdapter adapter = new SqlDataAdapter();
-        String sql = "insert into usuarios (nombres,apellidos) values('" + nombre + "','" + apellido + "')";
+        String sql = "insert into usuarios (nombres,apellidos) values('" + Form.nombre + "','" + Form.apellido + "')";
 
         // ejecución del query
 
@@ -147,7 +167,7 @@
         connection.Close();
 
         // se reinician los valores de nombre y apellido
-        nombre = "";
-        apellido = "";
+        //nombre = "";
+        //apellido = "";
     }
 }
