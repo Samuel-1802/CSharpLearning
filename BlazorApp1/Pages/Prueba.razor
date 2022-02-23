@@ -20,16 +20,16 @@
 <h1>Calculadora</h1>
 <p>Calculador básica que realiza adición, substracción, multiplicación y división</p>
 
-<input type="number" name="num1" @bind="num1">
-<input type="number" name="num2" @bind="num2">
+<input class="form-control" type="number" @bind="num1">
+<br />
+<input class="form-control" type="number" @bind="num2">
 
 <br />
-<br />
 
-<button @onclick="@(e => Add(num1, num2))">Sumar</button>
-<button @onclick="@(e => Substract(num1, num2))">Restar</button>
-<button @onclick="@(e => Multiply(num1, num2))">Multiplicar</button>
-<button @onclick="@(e => Divide(num1, num2))">Dividir</button>
+<button class="btn btn-primary" @onclick="@(e => Add(num1, num2))">Sumar</button>
+<button class="btn btn-primary" @onclick="@(e => Substract(num1, num2))">Restar</button>
+<button class="btn btn-primary" @onclick="@(e => Multiply(num1, num2))">Multiplicar</button>
+<button class="btn btn-primary" @onclick="@(e => Divide(num1, num2))">Dividir</button>
 
 <br />
 <br />
@@ -44,21 +44,46 @@
 
 <hr />
 
+<h1>Prueba SQL</h1>
+
+<p>Ingresar nombre y apellido a una base de datos SQL Server.</p>
+
+<input class="form-control" type="text" @bind="nombre" placeholder="Nombre">
+<br />
+<input class="form-control" type="text" @bind="apellido" placeholder="Apellido">
+
+<br />
+
+@if (@nombre == "" || @apellido == "")
+{
+    <button class="btn btn-primary" @onclick="Insert" disabled>Agregar</button>
+} else
+{
+    <button class="btn btn-primary" @onclick="Insert">Agregar</button>
+}
 
 
+<br />
+<br />
 
 @code {
+
+    // Variables
     private Boolean variable = false;
     private decimal num1 = 0;
     private decimal num2 = 0;
     private decimal result = 0;
     private string error = "";
+    private string nombre = "";
+    private string apellido = "";
 
+    // Función de botón
     private void Toggle()
     {
         variable = !variable;
     }
 
+    // Funciones de calculadora
     private void Add(decimal num1, decimal num2)
     {
         error = "";
@@ -91,4 +116,38 @@
         }
     }
 
+    // Funcion SQL
+    private void Insert()
+    {
+        // variables necesarias para crear una conexión
+
+        // string para ingresar a la base de datos
+        string sqlCredentials = @"Data Source=LAPTOP-IB97SQ55\SQLEXPRESS;Initial Catalog=winledger;User ID=sa;Password=password;Trusted_Connection=True";
+        
+        // conexión a la base de datos
+        SqlConnection connection = new SqlConnection(sqlCredentials);
+
+        // query insert a al base de datos
+        SqlCommand command;
+        SqlDataAdapter adapter = new SqlDataAdapter();
+        String sql = "insert into usuarios (nombres,apellidos) values('" + nombre + "','" + apellido + "')";
+
+        // ejecución del query
+
+        // se abre la conexión
+        connection.Open();
+
+        // se ejecuta el string del query
+        command = new SqlCommand(sql, connection);
+        adapter.InsertCommand = new SqlCommand(sql, connection);
+        adapter.InsertCommand.ExecuteNonQuery();
+
+        // se cierra la conexión
+        command.Dispose();
+        connection.Close();
+
+        // se reinician los valores de nombre y apellido
+        nombre = "";
+        apellido = "";
+    }
 }
