@@ -48,7 +48,7 @@
 
 <p>Ingresar nombre y apellido a una base de datos SQL Server.</p>
 
-@* <input class="form-control" type="text" @bind="nombre" @bind:event="oninput" placeholder="Nombre">
+@*<input class="form-control" type="text" @bind="nombre" @bind:event="oninput" placeholder="Nombre">
 <br />
 <input class="form-control" type="text" @bind="apellido" @bind:event="oninput" placeholder="Apellido">
 
@@ -167,7 +167,7 @@
         connection.Close();
 
         // se reinician los valores de nombre y apellido
-        //nombre = "";
-        //apellido = "";
+        Form.nombre = "";
+        Form.apellido = "";
     }
 }
