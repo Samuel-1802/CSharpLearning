@@ -1,45 +1,58 @@
 ﻿@inherits LayoutComponentBase
+@using System.Web;
 
 <PageTitle>BlazorApp1</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<AuthorizeView>
+    <Authorized>
+        <div class="page">
+            <div class="sidebar">
+                <NavMenu />
+            </div>
 
-    <main>
-        <div class="top-row px-4">
-            @*<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>*@
-            <LoginControl/>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-
-@*<div class="page justify-content-center m-5">
-    <main>
-        <div class="row">
-            <div class="container col-4 p-4">
-                <div class="text-center">
-                    <img src="img/winledger.png" />
+            <main>
+                <div class="top-row px-4">
+                    @*<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>*@
+                    <LoginControl/>
                 </div>
-            </div>
+
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
         </div>
-        <div class="row">
-            <div class="container col-4 border rounded p-4">
-                <form>
-                    <label for="usuario" class="form-label">Usuario</label>
-                    <input type="text" class="form-control" name="usuario"/>
-                    <br />
-                    <label for="clave" class="form-label">Clave</label>
-                    <input type="password" class="form-control" name="clave"/>
-                    <br />
-                    <button class="btn btn-primary" type="submit">Ingresar</button>
-                </form>
-            </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="page justify-content-center m-5">
+            <main>
+                <div class="row">
+                    <div class="container col-4 p-4">
+                        <div class="text-center">
+                            <img src="img/winledger.png" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container col-4 border rounded p-4">
+                            <label for="usuario" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" @bind="Username" name="Username"/>
+                            <br />
+                            <label for="clave" class="form-label">Clave</label>
+                            <input type="password" class="form-control" @bind="Password" name="Password"/>
+                            <br />
+                            <a class="btn btn-primary" href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)">Ingresar</a>
+                    </div>
+                </div>
+            </main>
         </div>
-    </main>
-</div>*@
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    string Username = "";
+    string Password = "";
+    private string encode(string param)
+    {
+        return HttpUtility.UrlEncode(param);
+    }
+}
