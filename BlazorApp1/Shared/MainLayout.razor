@@ -2,49 +2,44 @@
 
 <PageTitle>BlazorApp1</PageTitle>
 
-<AuthorizeView>
-    <Authorized>
-        <div class="page">
-            <div class="sidebar">
-                <NavMenu />
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            @*<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>*@
+            <LoginControl/>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@*<div class="page justify-content-center m-5">
+    <main>
+        <div class="row">
+            <div class="container col-4 p-4">
+                <div class="text-center">
+                    <img src="img/winledger.png" />
+                </div>
             </div>
-
-            <main>
-                <div class="top-row px-4">
-                    <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-                </div>
-
-                <article class="content px-4">
-                    @Body
-                </article>
-            </main>
         </div>
-    </Authorized>
-
-    <NotAuthorized>
-        <div class="page justify-content-center m-5">
-            <main>
-                <div class="row">
-                    <div class="container col-4 p-4">
-                        <div class="text-center">
-                            <img src="img/winledger.png" />
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="container col-4 border rounded p-4">
-                        <form>
-                            <label for="usuario" class="form-label">Usuario</label>
-                            <input type="text" class="form-control" name="usuario"/>
-                            <br />
-                            <label for="clave" class="form-label">Clave</label>
-                            <input type="password" class="form-control" name="clave"/>
-                            <br />
-                            <button class="btn btn-primary" type="submit">Ingresar</button>
-                        </form>
-                    </div>
-                </div>
-            </main>
+        <div class="row">
+            <div class="container col-4 border rounded p-4">
+                <form>
+                    <label for="usuario" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" name="usuario"/>
+                    <br />
+                    <label for="clave" class="form-label">Clave</label>
+                    <input type="password" class="form-control" name="clave"/>
+                    <br />
+                    <button class="btn btn-primary" type="submit">Ingresar</button>
+                </form>
+            </div>
         </div>
-    </NotAuthorized>
-</AuthorizeView>
+    </main>
+</div>*@
