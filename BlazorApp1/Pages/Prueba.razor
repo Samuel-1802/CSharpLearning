@@ -1,4 +1,5 @@
 ﻿@page "/prueba"
+@using static BlazorApp1.Shared.MainLayout
 
 <PageTitle>Prueba</PageTitle>
 
@@ -76,6 +77,11 @@
 <br />
 <br />
 
+<hr />
+
+<h1>CascadingParameter</h1>
+testValue.name = @testValue.name
+
 @code {
 
     // Variables
@@ -87,6 +93,10 @@
     //private string nombre = "";
     //private string apellido = "";
     private FormModel Form = new();
+
+    // Valor en cascada
+    [CascadingParameter (Name = "testValue")]
+    protected testCascadingClass? testValue { get; set; }
 
     public class FormModel
     {

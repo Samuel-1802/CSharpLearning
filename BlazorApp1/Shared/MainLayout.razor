@@ -17,7 +17,26 @@
                 </div>
 
                 <article class="content px-4">
-                    @Body
+                    <CascadingValue Value="@testValue" Name="testValue">
+                        @Body
+                    </CascadingValue>
+
+                    <br />
+                    <br />
+                    <h3>Seleccionar valor</h3>
+                    <select class="form-select" @onchange="nameChanged">
+                        <option value="None" selected disabled>Seleccione...</option>
+                        <option value="Samuel Velásquez">Samuel Velásquez</option>
+                        <option value="Samantha Velásquez">Samantha Velásquez</option>
+                        <option value="Juan Velásquez">Juan Velásquez</option>
+                        <option value="Yubiry Nuñez">Yubiry Nuñez</option>
+                    </select>
+
+                    @*<input class="form-control" type="text" @bind="@input" />*@
+
+                    <br />
+                    @*<button class="btn btn-primary" @onclick="@(e => testValue.setName(input))">Cambiar</button>*@
+                    
                 </article>
             </main>
         </div>
@@ -51,8 +70,27 @@
 @code {
     string Username = "";
     string Password = "";
+    string input = "";
+
+    private testCascadingClass testValue = new() { name = "None" };
+
+    public class testCascadingClass
+    {
+        public string? name { get; set; }
+    }
+
+    public void nameChanged(ChangeEventArgs e)
+    {
+        if (e.Value is not null)
+        {
+            testValue.name = (string)e.Value;
+        }
+    }
+
     private string encode(string param)
     {
         return HttpUtility.UrlEncode(param);
     }
+
+
 }
