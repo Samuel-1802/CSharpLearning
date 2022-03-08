@@ -1,0 +1,74 @@
+﻿@page "/parentchild"
+
+@*Componente hijo SIN CascadingValue*@
+<Child UserChanged="@GetUser"/>
+
+<br />
+
+<table class="table">
+    <thead>
+        <td span="col">ID</td>
+        <td span="col">Nombre</td>
+        <td span="col">Apellido</td>
+    </thead>
+    <tr>
+        <td colspan="col">@if (@currentUser.id != 0)
+            {
+                @currentUser.id
+            }
+        </td>
+        <td colspan="col">@currentUser.firstName</td>
+        <td colspan="col">@currentUser.lastName</td>
+    </tr>
+</table>
+
+@code {
+
+    public User currentUser = new();
+
+    // Clase usuario
+    public class User
+    {
+        public int id { get; set; }
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
+    }
+
+    Task GetUser(int id)
+    {
+        // string para ingresar a la base de datos
+        string sqlCredentials = @"Data Source=LAPTOP-IB97SQ55\SQLEXPRESS;Initial Catalog=winledger;User ID=sa;Password=password;Trusted_Connection=True";
+
+        // conexión a la base de datos
+        SqlConnection connection = new SqlConnection(sqlCredentials);
+
+        // query insert a al base de datos
+        SqlCommand command;
+        SqlDataAdapter adapter = new SqlDataAdapter();
+        String sql = "select * from usuarios where id=" + id;
+
+        // ejecución del query
+
+        // se abre la conexión
+        connection.Open();
+
+        // se ejecuta el string del query
+        command = new SqlCommand(sql, connection);
+        adapter.SelectCommand = new SqlCommand(sql, connection);
+
+        var reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            currentUser.id = Convert.ToInt32(reader["id"]);
+            currentUser.firstName = reader["nombres"].ToString();
+            currentUser.lastName = reader["apellidos"].ToString();
+        }
+
+        // se cierra la conexión
+        command.Dispose();
+        connection.Close();
+
+        return Task.CompletedTask;
+    }
+}

@@ -1,0 +1,85 @@
+﻿@page "/sqlcascade"
+@using static BlazorApp1.Shared.MainLayout
+@layout BlazorApp1.Shared.ComponentLayout
+
+<br />
+
+<h3>Información del usuario</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+        </tr>
+    </thead>
+    <tr>
+        <td scope="col">
+            @if (currentUser.id != 0)
+            {
+                @currentUser.id
+            }
+        </td>
+        <td scope="col">@currentUser.firstName</td>
+        <td scope="col">@currentUser.lastName</td>
+    </tr>
+</table>
+
+@code {
+    private User currentUser = new();
+
+    [CascadingParameter (Name = "selectedId")]
+    private int selectedId { get; set; }
+
+    public class User
+    {
+        public int id { get; set; }
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
+    }
+
+    Task GetUserInfo()
+    {
+
+        // string para ingresar a la base de datos
+        string sqlCredentials = @"Data Source=LAPTOP-IB97SQ55\SQLEXPRESS;Initial Catalog=winledger;User ID=sa;Password=password;Trusted_Connection=True";
+
+        // conexión a la base de datos
+        SqlConnection connection = new SqlConnection(sqlCredentials);
+
+        // query insert a al base de datos
+        SqlCommand command;
+        SqlDataAdapter adapter = new SqlDataAdapter();
+        String sql = "select * from usuarios where id=" + selectedId;
+
+        // ejecución del query
+
+        // se abre la conexión
+        connection.Open();
+
+        // se ejecuta el string del query
+        command = new SqlCommand(sql, connection);
+        adapter.SelectCommand = new SqlCommand(sql, connection);
+
+        var reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            currentUser.id = Convert.ToInt32(reader["id"]);
+            currentUser.firstName = reader["nombres"].ToString();
+            currentUser.lastName = reader["apellidos"].ToString();
+        }
+
+        // se cierra la conexión
+        command.Dispose();
+        connection.Close();
+
+        return Task.CompletedTask;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await GetUserInfo();
+    }
+}

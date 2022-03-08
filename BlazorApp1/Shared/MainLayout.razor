@@ -21,16 +21,24 @@
                         @Body
                     </CascadingValue>
 
-                    <br />
+                    @*<br />
                     <br />
                     <h3>Seleccionar valor</h3>
                     <select class="form-select" @onchange="nameChanged">
-                        <option value="None" selected disabled>Seleccione...</option>
+                        <option value="None" selected disabled hidden>Seleccione...</option>
                         <option value="Samuel Velásquez">Samuel Velásquez</option>
                         <option value="Samantha Velásquez">Samantha Velásquez</option>
                         <option value="Juan Velásquez">Juan Velásquez</option>
                         <option value="Yubiry Nuñez">Yubiry Nuñez</option>
-                    </select>
+                    </select>*@
+
+                    @*<input class="form-control" type="text" name="nombre" list="nombres" @onchange="nameChanged" />
+                    <datalist id="nombres">
+                        <option value="Samuel Velásquez">Samuel Velásquez</option>
+                        <option value="Samantha Velásquez">Samantha Velásquez</option>
+                        <option value="Juan Velásquez">Juan Velásquez</option>
+                        <option value="Yubiry Nuñez">Yubiry Nuñez</option>
+                    </datalist>*@
 
                     @*<input class="form-control" type="text" @bind="@input" />*@
 

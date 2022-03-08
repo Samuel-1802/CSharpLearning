@@ -1,0 +1,104 @@
+﻿
+
+@*<input class="form-control" type="text" name="nombre" list="nombres" @onchange="UserSelected"/>
+<datalist id="nombres">
+    @foreach (var user in users)
+    {
+        <option value=@user.id>@user.firstName @user.lastName</option>
+    }
+</datalist>*@
+
+<select class="form-control" name="usuarios" @onchange="UserSelected">
+    <option value="" selected disabled hidden>Seleccione...</option>
+    @foreach (var user in users)
+    {
+        <option value=@user.id>@user.id | @user.firstName @user.lastName</option>
+    }
+</select>
+<br />
+<button class="btn btn-primary" @onclick="@UpdateUser">Confiramar</button>
+<br />
+
+@code {
+
+    // Variables, lista de usuarios, usuario seleccionado
+    List<User> users = new List<User>();
+    private int selectedId;
+
+    [Parameter]
+    public EventCallback<int> UserChanged { get; set; }
+
+    // Clase usuario
+    public class User
+    {
+        public int id { get; set; }
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
+    }
+
+    // Toma el id del usuario seleccionado
+    public void UserSelected(ChangeEventArgs e)
+    {
+        if (e.Value is not null)
+        {
+            selectedId = Convert.ToInt32(e.Value);
+        }
+    }
+
+    async Task UpdateUser()
+    {
+        UserChanged.InvokeAsync(selectedId);
+    }
+
+    //public void FindUser()
+    //{
+    //    selectedUser = users.FirstOrDefault(user => user.id == selectedId);
+    //}
+
+    // Función para cargar usuarios desde la base de datos
+    Task LoadUsers()
+    {
+        // string para ingresar a la base de datos
+        string sqlCredentials = @"Data Source=LAPTOP-IB97SQ55\SQLEXPRESS;Initial Catalog=winledger;User ID=sa;Password=password;Trusted_Connection=True";
+
+        // conexión a la base de datos
+        SqlConnection connection = new SqlConnection(sqlCredentials);
+
+        // query insert a al base de datos
+        SqlCommand command;
+        SqlDataAdapter adapter = new SqlDataAdapter();
+        String sql = "select id, nombres, apellidos from usuarios";
+
+        // ejecución del query
+
+        // se abre la conexión
+        connection.Open();
+
+        // se ejecuta el string del query
+        command = new SqlCommand(sql, connection);
+        adapter.SelectCommand = new SqlCommand(sql, connection);
+
+        var reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            var user = new User();
+            user.id = Convert.ToInt32(reader["id"]);
+            user.firstName = reader["nombres"].ToString();
+            user.lastName = reader["apellidos"].ToString();
+            users.Add(user);
+        }
+
+        // se cierra la conexión
+        command.Dispose();
+        connection.Close();
+
+        return Task.CompletedTask;
+    }
+
+    // Cargar usuarios de manera asíncrona
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+}
